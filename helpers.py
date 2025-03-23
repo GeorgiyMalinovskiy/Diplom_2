@@ -16,14 +16,16 @@ def register_new_user_and_return_login_password():
 
     payload = {
         "email": email,
-        "name": name,
-        "password": password
+        "password": password,
+        "name": name
     }
 
-    response = requests.post(AUTH_REGISTER_PATH, json=payload, timeout=5)
-
-    if response.status_code == 201:
-        response.json()
-
-    return {}
+    try:
+        response = requests.post(AUTH_REGISTER_PATH, json=payload, timeout=5)
+        if response.status_code == 200:
+            return email, password, name
+    except Exception as e:
+        print(f"Error during registration: {e}")
+    
+    return None, None, None
     

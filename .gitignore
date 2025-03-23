@@ -13,7 +13,6 @@ venv/
 target/
 !target/allure-results/
 allure-report/
-allure-results/
 
 # Logs
 *.log
