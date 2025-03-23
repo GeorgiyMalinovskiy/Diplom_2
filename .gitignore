@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+
+# IDE
+.vscode/
+
+# Testing
+.pytest_cache/
+.coverage
+
+# Allure
+target/
+!target/allure-results/
+allure-report/
+allure-results/
+
+# Logs
+*.log
+logs/
+log/
