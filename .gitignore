@@ -1,5 +1,6 @@
 # Python
 __pycache__/
+venv/
 
 # IDE
 .vscode/
@@ -12,7 +13,6 @@ __pycache__/
 target/
 !target/allure-results/
 allure-report/
-allure-results/
 
 # Logs
 *.log
