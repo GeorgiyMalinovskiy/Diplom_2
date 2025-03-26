@@ -1,14 +1,18 @@
 import allure
-import pytest
 import requests
 
-from helpers import register_new_user_and_return_login_password
-from configuration import ORDERS_PATH, INGREDIENTS_PATH, AUTH_LOGIN_PATH
+from helpers import register_new_user_and_return_login_password, delete_user
+from configuration import ORDERS_PATH, INGREDIENTS_PATH, AUTH_LOGIN_PATH, ERROR_MESSAGES
 
 @allure.feature('Заказ')
 class TestOrder:
     def setup_method(self):
         self.token = None
+        self.email = None
+        self.password = None
+
+    def teardown_method(self):
+        delete_user(self.token)
 
     def get_ingredients(self):
         response = requests.get(INGREDIENTS_PATH)
@@ -17,8 +21,9 @@ class TestOrder:
 
     @allure.title('Создание заказа с авторизацией')
     def test_create_order_with_auth(self):
-        email, password, _ = register_new_user_and_return_login_password()
-        auth_response = requests.post(AUTH_LOGIN_PATH, json={"email": email, "password": password})
+        user_data = register_new_user_and_return_login_password()
+        self.email, self.password = user_data[0], user_data[1]
+        auth_response = requests.post(AUTH_LOGIN_PATH, json={"email": self.email, "password": self.password})
         assert auth_response.status_code == 200
         self.token = auth_response.json().get("accessToken")
 
@@ -45,7 +50,7 @@ class TestOrder:
         
         assert response.status_code == 400
         assert response.json()["success"] is False
-        assert "ingredient ids must be provided" == response.json()["message"].lower()
+        assert ERROR_MESSAGES["INVALID_INGREDIENTS"] == response.json()["message"].lower()
 
     @allure.title('Создание заказа с неверным хешем ингредиентов')
     def test_create_order_with_invalid_ingredients(self):
@@ -56,8 +61,9 @@ class TestOrder:
 
     @allure.title('Получение заказов авторизованного пользователя')
     def test_get_orders_with_auth(self):
-        email, password, _ = register_new_user_and_return_login_password()
-        auth_response = requests.post(AUTH_LOGIN_PATH, json={"email": email, "password": password})
+        user_data = register_new_user_and_return_login_password()
+        self.email, self.password = user_data[0], user_data[1]
+        auth_response = requests.post(AUTH_LOGIN_PATH, json={"email": self.email, "password": self.password})
         assert auth_response.status_code == 200
         self.token = auth_response.json().get("accessToken")
 
@@ -77,4 +83,4 @@ class TestOrder:
         
         assert response.status_code == 401
         assert response.json()["success"] is False
-        assert "you should be authorised" == response.json()["message"].lower()
+        assert ERROR_MESSAGES["UNAUTHORIZED"] == response.json()["message"].lower()

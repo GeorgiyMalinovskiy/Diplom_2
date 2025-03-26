@@ -9,3 +9,11 @@ AUTH_LOGOUT_PATH = f"{BASE_URL}/auth/logout"
 AUTH_TOKEN_PATH = f"{BASE_URL}/auth/token"
 AUTH_USER_PATH = f"{BASE_URL}/auth/user"
 
+ERROR_MESSAGES = {
+    "USER_ALREADY_EXISTS": "user already exists",
+    "REQUIRED_FIELDS": "required fields",
+    "WRONG_CREDENTIALS": "wrong credentials",
+    "UNAUTHORIZED": "you should be authorised",
+    "INVALID_LOGIN_OR_PASSWORD": "email or password are incorrect",
+    "INVALID_INGREDIENTS": "ingredient ids must be provided"
+}
